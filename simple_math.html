@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>HomeForty Value Calculator</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* ── Design tokens ─────────────────────────────────────────── */
+:root {
+  --forest:   #3B1F0E;
+  --mid:      #5C2E0D;
+  --moss:     #8B5E3C;
+  --cream:    #F9F5EF;
+  --warm:     #EDE5D8;
+  --text:     #1C110A;
+  --muted:    #7A6050;
+  --rule:     #D9CDBF;
+  --inp-bg:   #FFFFFF;
+  --inp-bd:   #C4B09A;
+  --inp-focus:#5C2E0D;
+  --card-bg:  #FFFFFF;
+  --shadow:   0 2px 20px rgba(59,31,14,.09);
+  --shadow-lg:0 6px 32px rgba(59,31,14,.14);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --forest:   #1A0D05;
+    --mid:      #7A4520;
+    --moss:     #8B5E3C;
+    --cream:    #150E08;
+    --warm:     #1E1510;
+    --text:     #F0E8DC;
+    --muted:    #9E8070;
+    --rule:     #2E2018;
+    --inp-bg:   #1E150E;
+    --inp-bd:   #4A3020;
+    --inp-focus:#8B5E3C;
+    --card-bg:  #1E150E;
+    --shadow:   0 2px 20px rgba(0,0,0,.35);
+    --shadow-lg:0 6px 32px rgba(0,0,0,.5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --forest:   #1A0D05;
+  --mid:      #7A4520;
+  --moss:     #8B5E3C;
+  --cream:    #150E08;
+  --warm:     #1E1510;
+  --text:     #F0E8DC;
+  --muted:    #9E8070;
+  --rule:     #2E2018;
+  --inp-bg:   #1E150E;
+  --inp-bd:   #4A3020;
+  --inp-focus:#8B5E3C;
+  --card-bg:  #1E150E;
+  --shadow:   0 2px 20px rgba(0,0,0,.35);
+  --shadow-lg:0 6px 32px rgba(0,0,0,.5);
+  color-scheme: dark;
+}
+
+/* ── Reset / base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left,0px));
+  padding-right: max(16px, env(safe-area-inset-right,0px));
+  padding-bottom: max(48px, env(safe-area-inset-bottom,0px));
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.site-header {
+  background: var(--forest);
+  margin-left: max(-16px, calc(-1 * env(safe-area-inset-left,0px)));
+  margin-right: max(-16px, calc(-1 * env(safe-area-inset-right,0px)));
+  padding: 22px max(32px, env(safe-area-inset-left,0px));
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.logo-mark {
+  width: 36px; height: 36px;
+  background: var(--moss);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-mark svg { width: 20px; height: 20px; }
+.site-header h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -.01em;
+  line-height: 1;
+}
+
+/* ════════════════════════════════════════════════════════════
+   LANDING
+════════════════════════════════════════════════════════════ */
+.landing {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 0 56px;
+}
+
+/* hero */
+.landing-hero {
+  text-align: center;
+  padding: 64px 0 52px;
+}
+.landing-eyebrow {
+  display: inline-block;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: 18px;
+}
+.landing-hero h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.1rem, 6vw, 3rem);
+  font-weight: 900;
+  color: var(--forest);
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0 0 20px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .landing-hero h2 { color: var(--text); }
+}
+:root[data-theme="dark"] .landing-hero h2 { color: var(--text); }
+
+.landing-hero .lead {
+  font-size: 1.05rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto 36px;
+}
+
+/* start button */
+.btn-start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--forest);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  padding: 18px 40px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  box-shadow: 0 4px 20px rgba(59,31,14,.28);
+  letter-spacing: -.01em;
+}
+.btn-start:hover {
+  background: var(--mid);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(59,31,14,.34);
+}
+.btn-start svg { flex-shrink: 0; }
+.landing-cta-sub {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* three force tiles */
+.force-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  margin-top: 0;
+}
+@media (max-width: 580px) {
+  .force-row { grid-template-columns: 1fr; gap: 10px; }
+}
+.force-tile {
+  background: var(--card-bg);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 22px 18px 20px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.force-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--warm);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+  border: 1.5px solid var(--rule);
+}
+.force-icon svg { width: 20px; height: 20px; color: var(--moss); }
+.force-name {
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: 4px;
+}
+.force-desc {
+  font-size: .84rem;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+.force-sub {
+  font-size: .77rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ════════════════════════════════════════════════════════════
+   WIZARD SHELL
+════════════════════════════════════════════════════════════ */
+.wizard {
+  max-width: 660px;
+  margin: 0 auto;
+  padding-top: 44px;
+}
+
+/* ── Progress dots (compact) ────────────────────────────── */
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 32px;
+  padding: 0 4px;
+}
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+.step-dot {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--rule);
+  background: var(--card-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .68rem;
+  font-weight: 800;
+  color: var(--muted);
+  transition: all .25s;
+  position: relative;
+  z-index: 1;
+}
+.step-dot.active {
+  border-color: var(--mid);
+  background: var(--mid);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(92,46,13,.15);
+}
+.step-dot.done {
+  border-color: var(--moss);
+  background: var(--moss);
+  color: #fff;
+}
+.progress-line {
+  flex: 1;
+  height: 2px;
+  background: var(--rule);
+  transition: background .25s;
+  max-width: 48px;
+  margin-bottom: 0;
+}
+.progress-line.done { background: var(--moss); }
+
+/* step counter label */
+.step-counter {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+/* ── Step card ──────────────────────────────────────────── */
+.step-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 44px 44px 38px;
+  box-shadow: var(--shadow-lg);
+  display: none;
+}
+.step-card.active { display: block; }
+@media (max-width: 520px) {
+  .step-card { padding: 28px 20px 24px; border-radius: 14px; }
+}
+
+.step-eyebrow {
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--moss);
+  margin-bottom: 10px;
+}
+.step-card h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  text-wrap: balance;
+  margin-bottom: 12px;
+}
+.step-card .sub {
+  font-size: .92rem;
+  color: var(--muted);
+  margin-bottom: 32px;
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+/* ── Inputs ─────────────────────────────────────────────── */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.field label {
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.field .hint {
+  font-size: .76rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.field input[type="number"],
+.field input[type="range"] {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.field input[type="number"] {
+  background: var(--inp-bg);
+  border: 1.5px solid var(--inp-bd);
+  border-radius: 9px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  transition: border-color .2s, box-shadow .2s;
+  font-variant-numeric: tabular-nums;
+}
+.field input[type="number"]:focus {
+  outline: none;
+  border-color: var(--inp-focus);
+  box-shadow: 0 0 0 3px rgba(92,46,13,.12);
+}
+
+/* slider */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.slider-row input[type="range"] {
+  flex: 1;
+  height: 4px;
+  background: var(--rule);
+  border-radius: 2px;
+  cursor: pointer;
+  accent-color: var(--mid);
+}
+.slider-val {
+  min-width: 52px;
+  text-align: right;
+  font-size: .92rem;
+  font-weight: 800;
+  color: var(--mid);
+  font-variant-numeric: tabular-nums;
+}
+
+/* split toggle */
+.split-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0;
+  border: 1.5px solid var(--inp-bd);
+  border-radius: 9px;
+  overflow: hidden;
+}
+@media (max-width: 440px) {
+  .split-toggle { grid-template-columns: 1fr 1fr; }
+}
+.split-btn {
+  padding: 11px 6px;
+  background: var(--inp-bg);
+  border: none;
+  cursor: pointer;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--muted);
+  transition: all .2s;
+  text-align: center;
+  border-right: 1px solid var(--inp-bd);
+  font-family: 'Inter', sans-serif;
+}
+.split-btn:last-child { border-right: none; }
+.split-btn.active {
+  background: var(--mid);
+  color: #fff;
+}
+
+.quality-inputs { margin-top: 16px; display: flex; flex-direction: column; gap: 18px; }
+
+/* yield lift tiles */
+.yield-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 480px) { .yield-tiles { grid-template-columns: 1fr; } }
+.yield-tile {
+  background: var(--forest);
+  color: #F9F5EF;
+  border-radius: 14px;
+  padding: 22px 20px 20px;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.yield-crop-label { font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .7; }
+.yield-number { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 8vw, 2.8rem); font-weight: 900; color: #F9F5EF; line-height: 1; }
+.yield-footnote { font-size: .68rem; opacity: .65; line-height: 1.4; margin-top: 4px; }
+.yield-context { font-size: .82rem; color: var(--muted); line-height: 1.6; margin: 0; }
+
+/* price input block */
+.price-input-block { background: var(--warm); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.price-input-hed { font-size: .85rem; font-weight: 700; color: var(--text); }
+.price-input-sub { font-size: .8rem; color: var(--muted); line-height: 1.55; margin: 0; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 480px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── Nav row ────────────────────────────────────────────── */
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 36px;
+  border-top: 1px solid var(--rule);
+  padding-top: 24px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 24px;
+  border-radius: 9px;
+  font-size: .9rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all .2s;
+  border: none;
+  letter-spacing: .01em;
+}
+.btn-primary {
+  background: var(--mid);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(92,46,13,.2);
+}
+.btn-primary:hover { background: var(--forest); box-shadow: 0 4px 16px rgba(92,46,13,.3); }
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--rule);
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+.btn svg { width: 16px; height: 16px; }
+
+/* math callout */
+.math-callout {
+  background: var(--warm);
+  border-left: 3px solid var(--moss);
+  border-radius: 0 9px 9px 0;
+  padding: 13px 16px;
+  font-size: .84rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.math-callout strong { color: var(--text); }
+
+/* bio block */
+.bio-block {
+  margin-top: 4px;
+  border: 1.5px solid var(--moss);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.bio-header {
+  background: var(--mid);
+  color: #fff;
+  font-weight: 700;
+  font-size: .84rem;
+  letter-spacing: .02em;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bio-desc {
+  font-size: .84rem;
+  color: var(--muted);
+  line-height: 1.55;
+  padding: 14px 16px 0;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESULTS
+════════════════════════════════════════════════════════════ */
+
+/* hero number — full-bleed dark reveal */
+.result-hero {
+  background: #2A1208;
+  border-radius: 20px;
+  text-align: center;
+  padding: 48px 28px 44px;
+  margin-bottom: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.result-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(139,94,60,.35) 0%, transparent 70%);
+  pointer-events: none;
+}
+.result-label {
+  font-size: .72rem;
+  font-weight: 800;
+  color: rgba(249,245,239,.55);
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.result-hero .result-label { color: rgba(255,255,255,.7); font-weight: 800; }
+.result-hero .result-big { color: #FFFFFF; font-weight: 900; }
+.result-hero .result-sub { color: rgba(255,255,255,.7); font-weight: 600; }
+.result-hero-eyebrow {
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #C4956A;
+  margin-bottom: 18px;
+}
+.result-hero-divider {
+  width: 48px; height: 2px;
+  background: var(--moss);
+  margin: 18px auto 0;
+  border-radius: 2px;
+}
+
+/* total-value block inside hero */
+.result-total-block {
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,.12);
+}
+.result-total-label {
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: #C4956A;
+  margin-bottom: 10px;
+}
+.result-total-val {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.6rem, 14vw, 6rem);
+  font-weight: 900;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.result-total-sub {
+  font-size: .82rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.75);
+  line-height: 1.5;
+}
+.result-supporting-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+@media (max-width: 480px) { .result-supporting-row { grid-template-columns: 1fr; } }
+.rsup-tile {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: left;
+}
+.rsup-label {
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 5px;
+}
+.rsup-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #FFFFFF;
+}
+
+/* old label outside hero */
+.result-label {
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--moss);
+  margin-bottom: 10px;
+}
+.result-big {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3.2rem, 12vw, 5rem);
+  font-weight: 900;
+  color: var(--forest);
+  line-height: 1;
+  letter-spacing: -.025em;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .result-big { color: var(--moss); }
+}
+:root[data-theme="dark"] .result-big { color: var(--moss); }
+
+.result-sub {
+  font-size: .92rem;
+  color: var(--muted);
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* full-width compounding hero */
+.compound-hero {
+  background: var(--forest);
+  border-radius: 16px;
+  padding: 32px 30px;
+  margin-bottom: 28px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .compound-hero { border: 1px solid var(--rule); }
+}
+:root[data-theme="dark"] .compound-hero { border: 1px solid var(--rule); }
+
+.compound-eyebrow {
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: 6px;
+}
+.compound-hero-hed {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 20px;
+  text-wrap: balance;
+}
+.compound-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 520px) {
+  .compound-stats-row { grid-template-columns: 1fr; gap: 10px; }
+}
+.cstat {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 16px;
+}
+.cstat.highlight {
+  background: rgba(139,94,60,.25);
+  border-color: var(--moss);
+}
+.cstat-label {
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 6px;
+}
+.cstat.highlight .cstat-label { color: var(--moss); }
+.cstat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+.compound-footer {
+  font-size: .78rem;
+  color: rgba(255,255,255,.4);
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+/* bar chart */
+.bar-chart {
+  margin-bottom: 28px;
+}
+.bar-chart-title {
+  font-size: .7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+.bar-yr {
+  width: 30px;
+  font-size: .7rem;
+  color: var(--muted);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--warm);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--mid);
+  border-radius: 5px;
+  transition: width .7s cubic-bezier(.16,1,.3,1);
+  min-width: 5px;
+}
+.bar-num {
+  width: 80px;
+  font-size: .76rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* breakdown table */
+.breakdown {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rule);
+  font-size: .88rem;
+}
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-row .bk-label { color: var(--muted); }
+.breakdown-row .bk-val {
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.breakdown-row.total {
+  background: var(--warm);
+}
+.breakdown-row.total .bk-label {
+  font-weight: 700;
+  color: var(--text);
+  font-size: .92rem;
+}
+.breakdown-row.total .bk-val {
+  color: var(--mid);
+  font-size: 1rem;
+}
+
+/* year-by-year table */
+.year-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 32px;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+}
+.year-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .78rem;
+  font-variant-numeric: tabular-nums;
+}
+.year-table th {
+  text-align: left;
+  padding: 10px 11px;
+  font-weight: 700;
+  font-size: .67rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  border-bottom: 2px solid var(--rule);
+  white-space: nowrap;
+  background: var(--warm);
+}
+.year-table td {
+  padding: 9px 11px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--text);
+}
+.year-table tr:last-child td {
+  border-bottom: none;
+  font-weight: 700;
+  color: var(--mid);
+  background: var(--warm);
+}
+.year-table td:not(:first-child) { text-align: right; }
+.year-table th:not(:first-child) { text-align: right; }
+
+/* cta block */
+.cta-block {
+  background: var(--forest);
+  border-radius: 14px;
+  padding: 28px 28px 26px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.cta-block p {
+  color: rgba(249,245,239,.75);
+  font-size: .9rem;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.cta-block p strong { color: #fff; }
+.btn-cta {
+  background: var(--moss);
+  color: #fff;
+  font-weight: 800;
+  padding: 14px 32px;
+  border-radius: 9px;
+  border: none;
+  font-size: .95rem;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: filter .2s, transform .15s;
+  letter-spacing: .01em;
+}
+.btn-cta:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* restart */
+.restart-link {
+  display: block;
+  text-align: center;
+  font-size: .78rem;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+}
+.restart-link:hover { color: var(--text); }
+
+/* section divider label */
+.section-label {
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0 16px;
+}
+.section-label::before,
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────────────── -->
+<header class="site-header">
+  <h1>HomeForty Membership Value Calculator</h1>
+</header>
+
+<!-- ════════════════════════════════════════════════════════
+     LANDING
+════════════════════════════════════════════════════════ -->
+<section class="landing" id="landing-section">
+
+  <div class="landing-hero">
+    <div class="landing-eyebrow">HomeForty Membership</div>
+    <h2>Next Generation Farmers<br>Create Your Own Advantage<br>Build Your Own Value</h2>
+    <p class="lead">
+      Take two minutes to find out what a HomeForty membership could be worth to your operation over the next decade.
+    </p>
+
+    <button class="btn-start" onclick="startWizard()">
+      Start the calculation
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="landing-cta-sub">Adjust every number to your operation. Nothing is fixed except the math.</div>
+  </div>
+
+  <!-- three force tiles -->
+  <div class="force-row">
+    <div class="force-tile">
+      <div class="force-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M3 10 C3 6.13 6.13 3 10 3s7 3.13 7 7-3.13 7-7 7S3 13.87 3 10z"/>
+          <path d="M10 7v6M7 10h6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="force-name">Volume Advantage</div>
+      <div class="force-desc">Membership pricing on every order</div>
+      <div class="force-sub">Every member gets the benefit of the whole network. Your order carries the pricing power of the entire HomeForty membership — no matter the size of your farm.</div>
+    </div>
+    <div class="force-tile">
+      <div class="force-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M4 14 L8 10 L11 13 L16 7" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="16" cy="7" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="force-name">Proven Advantage</div>
+      <div class="force-desc">More bushels per acre</div>
+      <div class="force-sub">Multi-season proven genetics, elite quality standards, and an included biological. Yield advantage built in.</div>
+    </div>
+    <div class="force-tile">
+      <div class="force-icon">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="6" width="14" height="10" rx="2"/>
+          <path d="M7 6V5a3 3 0 0 1 6 0v1" stroke-linecap="round"/>
+          <circle cx="10" cy="11" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="force-name">Financing Advantage</div>
+      <div class="force-desc">Rate below conventional</div>
+      <div class="force-sub">HomeForty seed financing typically runs well below a conventional operating line. Real money, growing every year.</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     WIZARD
+════════════════════════════════════════════════════════ -->
+<main class="wizard" id="wizard-section" style="display:none">
+
+  <!-- Progress dots -->
+  <div class="progress-wrap" id="progress" role="progressbar" aria-label="Step progress">
+    <div class="progress-step"><div class="step-dot active" id="dot-1">1</div></div>
+    <div class="progress-line" id="line-1"></div>
+    <div class="progress-step"><div class="step-dot" id="dot-2">2</div></div>
+    <div class="progress-line" id="line-2"></div>
+    <div class="progress-step"><div class="step-dot" id="dot-3">3</div></div>
+    <div class="progress-line" id="line-3"></div>
+    <div class="progress-step"><div class="step-dot" id="dot-4">4</div></div>
+    <div class="progress-line" id="line-4"></div>
+    <div class="progress-step"><div class="step-dot" id="dot-5">5</div></div>
+    <div class="progress-line" id="line-5"></div>
+    <div class="progress-step"><div class="step-dot" id="dot-6">6</div></div>
+  </div>
+
+  <!-- ── Step 1: Farm size ─────────────────────────────── -->
+  <section class="step-card active" id="step-1" aria-label="Step 1">
+    <div class="step-eyebrow">Step 1 of 6 — Your Farm</div>
+    <h2>How many acres are you farming?</h2>
+    <p class="sub">Membership value grows with your operation. Give us a starting point — we'll build the full 10-year picture from here.</p>
+
+    <div class="field-group">
+      <div class="field">
+        <label for="acres-start">Acres you're farming today</label>
+        <span class="hint">Enter your total planted acres this season.</span>
+        <input type="number" id="acres-start" value="500" min="50" max="50000" step="50">
+      </div>
+      <div class="field">
+        <label for="acres-end">Where you expect to be in 10 years</label>
+        <span class="hint">Growing your operation? So does your advantage. Keep the same number if you plan to hold steady.</span>
+        <input type="number" id="acres-end" value="1200" min="50" max="50000" step="50">
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <span></span>
+      <button class="btn btn-primary" onclick="go(2)">
+        Next
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Step 2: Crop mix ──────────────────────────────── -->
+  <section class="step-card" id="step-2" aria-label="Step 2">
+    <div class="step-eyebrow">Step 2 of 6 — Your Crops</div>
+    <h2>What's your crop mix?</h2>
+    <p class="sub">HomeForty membership delivers a volume pricing advantage on both corn and soybean seed. Tell us your mix and we'll calculate your exact advantage.</p>
+
+    <div class="field-group">
+      <div class="field">
+        <label>Corn / Soybean split</label>
+        <span class="hint">What share of your acres go to corn?</span>
+        <div class="split-toggle" role="group" aria-label="Corn share presets">
+          <button class="split-btn active" onclick="setCornShare(0.33, this)">1/3 corn</button>
+          <button class="split-btn" onclick="setCornShare(0.50, this)">50 / 50</button>
+          <button class="split-btn" onclick="setCornShare(0.67, this)">2/3 corn</button>
+          <button class="split-btn" onclick="setCornShare('custom', this)">Custom</button>
+        </div>
+      </div>
+
+      <div class="field" id="custom-corn-field" style="display:none">
+        <label for="corn-pct">% of acres in corn</label>
+        <div class="slider-row">
+          <input type="range" id="corn-pct" min="10" max="90" value="50" step="5"
+            oninput="document.getElementById('corn-pct-val').textContent=this.value+'%'; state.cornShare=parseInt(this.value)/100;">
+          <span class="slider-val" id="corn-pct-val">50%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Volume advantage on corn seed ($/unit)</label>
+        <span class="hint">As a member, you capture the volume pricing of the full membership on your corn order. Dial in your per-unit advantage — up to $30/unit.</span>
+        <div class="slider-row">
+          <input type="range" id="adv-corn" min="25" max="30" value="30" step="1"
+            oninput="document.getElementById('adv-corn-val').textContent='$'+this.value+'/unit'; updateCornPreview();">
+          <span class="slider-val" id="adv-corn-val">$30/unit</span>
+        </div>
+        <div class="math-callout">
+          Corn is planted at ~2.3 acres per unit. At <strong id="corn-adv-display">$30/unit</strong>, that's about <strong id="corn-ac-preview">$13.04</strong> per acre saved on corn seed.
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Volume advantage on soybean seed ($/unit)</label>
+        <span class="hint">Same membership volume dynamic on beans. Set your per-unit advantage — up to $10/unit.</span>
+        <div class="slider-row">
+          <input type="range" id="adv-soy" min="8" max="10" value="10" step="1"
+            oninput="document.getElementById('adv-soy-val').textContent='$'+this.value+'/unit';">
+          <span class="slider-val" id="adv-soy-val">$10/unit</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="go(1)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary" onclick="go(3)">
+        Next
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Step 3: Proven quality ────────────────────────── -->
+  <section class="step-card" id="step-3" aria-label="Step 3">
+    <div class="step-eyebrow">Step 3 of 6 — Proven Quality</div>
+    <h2>Proven quality. Products you already know work.</h2>
+    <p class="sub">HomeForty only sells hybrids and varieties that have multiple years of testing, have proven performance, and are widely produced and known. In addition, we maintain the highest standards of seed quality, which research shows for parity products increases yield up to 8 bushels for corn and 2 bushels for soybeans.</p>
+
+    <div class="quality-inputs">
+      <!-- Yield lift graphic tiles -->
+      <div class="yield-tiles">
+        <div class="yield-tile">
+          <div class="yield-crop-label">🌽 Corn</div>
+          <div class="yield-number">+4 bu/ac</div>
+          <div class="yield-footnote">Conservative estimate<br>Research supports up to 8 bu/ac</div>
+        </div>
+        <div class="yield-tile">
+          <div class="yield-crop-label">🫘 Soybeans</div>
+          <div class="yield-number">+1 bu/ac</div>
+          <div class="yield-footnote">Conservative estimate<br>Research supports up to 2 bu/ac</div>
+        </div>
+      </div>
+      <p class="yield-context">These are the yield lift numbers we're building into your calculation — the low end of what research shows for seed quality advantage on parity products. We're not using the high end. We're using numbers you can defend in any conversation.</p>
+
+      <input type="hidden" id="yield-corn" value="4">
+      <input type="hidden" id="yield-soy" value="1">
+
+      <!-- Market price inputs -->
+      <div class="price-input-block">
+        <div class="price-input-hed">Set your market prices</div>
+        <p class="price-input-sub">Yield lift is only worth what the market pays. Enter the prices that reflect your marketing plan — forward contract, basis, or your best estimate for the season ahead.</p>
+        <div class="two-col">
+          <div class="field">
+            <label for="price-corn">Corn price ($/bu)</label>
+            <span class="hint">Current futures hover around $4–5. Use your contracted or expected price.</span>
+            <input type="number" id="price-corn" value="4.50" min="2" max="12" step="0.25">
+          </div>
+          <div class="field">
+            <label for="price-soy">Soybean price ($/bu)</label>
+            <span class="hint">Current futures hover around $10–12. Use your contracted or expected price.</span>
+            <input type="number" id="price-soy" value="11.00" min="5" max="20" step="0.25">
+          </div>
+        </div>
+      </div>
+
+      <div class="bio-block">
+        <div class="bio-header">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 9c1-2 5-2 6 0s-5 4-6 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Planter box biological — included with membership
+        </div>
+        <p class="bio-desc">HomeForty includes a high-performance planter box biological treatment with every soybean order — the same category as Meristem and BW Fusion, baked into your price. Field results show an average 2 bu/ac lift on beans. Retail farmers pay separately for this, if they use it at all.</p>
+        <div class="field" style="margin: 12px 16px 16px;">
+          <label for="bio-cost">What do comparable biological treatments cost at retail? ($/ac)</label>
+          <span class="hint">Market rate for planter box biologicals runs $8–18/ac. Default is $10 — conservative and easy to defend.</span>
+          <input type="number" id="bio-cost" value="10" min="5" max="25" step="1">
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="go(2)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary" onclick="go(4)">
+        Next
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Step 4: Time horizon & financing ──────────────── -->
+  <section class="step-card" id="step-4" aria-label="Step 4">
+    <div class="step-eyebrow">Step 4 of 6 — 10 Years</div>
+    <h2>Let's look at 10 years</h2>
+    <p class="sub">A single year of savings is useful. Ten years of growing membership advantage is a different conversation entirely. Here's where scale and time work in your favor.</p>
+
+    <div class="field-group">
+      <div class="field">
+        <label>Operating line of credit (Year 1)</label>
+        <span class="hint">Seed financing through HomeForty typically runs 2–3% below conventional rates. What's your approximate operating loan?</span>
+        <input type="number" id="op-line" value="200000" min="0" max="10000000" step="10000">
+      </div>
+      <div class="field">
+        <label>Operating line of credit (Year 10, projected)</label>
+        <span class="hint">As your operation grows, so does the financing advantage.</span>
+        <input type="number" id="op-line-end" value="500000" min="0" max="10000000" step="10000">
+      </div>
+    </div>
+
+    <div class="math-callout" style="margin-top: 16px;">
+      <strong>Why 10 years?</strong> Seed prices across the industry have historically risen ~4% per year. HomeForty's operating structure — direct sourcing, no dealer margin, membership model — is what allows us to keep pricing lower than conventional channels. That structural gap is what makes your advantage <em>grow</em> every year you're a member.
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="go(3)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary" onclick="go(5)">
+        Next — Compounding
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Step 5: Compounding ──────────────────────────── -->
+  <section class="step-card" id="step-5" aria-label="Step 5">
+    <div class="step-eyebrow">Step 5 of 6 — Compounding</div>
+    <h2>Now watch your savings earn more savings.</h2>
+    <p class="sub">Take those savings and see what happens if you put them to work. Every dollar you don't overpay for seed or financing is a dollar that can compound somewhere else.</p>
+
+    <div class="field-group">
+      <div class="field">
+        <label>What share of your annual savings do you reinvest?</label>
+        <span class="hint">Default is 50%. Adjust to match how you'd actually use these dollars.</span>
+        <div class="slider-row">
+          <input type="range" id="reinvest-pct" min="10" max="100" value="50" step="5"
+            oninput="document.getElementById('reinvest-pct-val').textContent=this.value+'%';">
+          <span class="slider-val" id="reinvest-pct-val">50%</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Annual return on reinvested dollars</label>
+        <span class="hint">5% is conservative — whether that's a savings instrument, paying down operating debt, or reinvesting in your land.</span>
+        <div class="slider-row">
+          <input type="range" id="reinvest-rate" min="2" max="12" value="5" step="0.5"
+            oninput="document.getElementById('reinvest-rate-val').textContent=this.value+'%';">
+          <span class="slider-val" id="reinvest-rate-val">5%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="go(4)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary" onclick="calculate(); go(6);">
+        See My Number
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Step 6: Results ──────────────────────────────── -->
+  <section class="step-card" id="step-6" aria-label="Step 6 – Your Results">
+    <div class="step-eyebrow">Your Membership Advantage</div>
+    <h2>Here's what HomeForty membership could be worth to your operation.</h2>
+
+    <!-- 1. Unified hero reveal -->
+    <div class="result-hero">
+      <div class="result-hero-eyebrow">Your 10-Year Membership Advantage</div>
+      <div class="result-label">Cumulative savings &amp; yield gains</div>
+      <div class="result-big" id="r-total">$—</div>
+      <div class="result-sub" id="r-per-year">≈ $— per year on average</div>
+      <div class="result-hero-divider"></div>
+
+      <!-- Compounding total — the big deal -->
+      <div class="result-total-block" id="compound-callout">
+        <div class="result-total-label">When you put it to work — total value created</div>
+        <div class="result-total-val" id="c-total">$—</div>
+        <div class="result-total-sub">If you reinvest <span id="c-pct-label">50%</span> of your annual advantage at <span id="c-rate-label">5%</span>/yr — a grain marketing account, paying down operating debt, or cash rent — here's what this decision is worth over 10 years.</div>
+        <div class="result-supporting-row">
+          <div class="rsup-tile">
+            <div class="rsup-label">Dollars reinvested</div>
+            <div class="rsup-val" id="c-invested">$—</div>
+          </div>
+          <div class="rsup-tile">
+            <div class="rsup-label">Growth on those dollars</div>
+            <div class="rsup-val" id="c-growth">$—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Bar chart -->
+    <div class="section-label">Annual advantage, year by year</div>
+    <div class="bar-chart" id="bar-chart">
+      <div id="bars-container"></div>
+    </div>
+
+    <!-- 4. Breakdown -->
+    <div class="section-label">Where the advantage comes from</div>
+    <div class="breakdown">
+      <div class="breakdown-row">
+        <span class="bk-label">Seed savings — corn</span>
+        <span class="bk-val" id="r-corn">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bk-label">Seed savings — soybeans</span>
+        <span class="bk-val" id="r-soy">—</span>
+      </div>
+      <div class="breakdown-row" id="r-quality-row">
+        <span class="bk-label">Proven quality yield advantage</span>
+        <span class="bk-val" id="r-quality">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bk-label">Planter box biological — cost savings</span>
+        <span class="bk-val" id="r-bio-cost">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bk-label">Planter box biological — yield advantage</span>
+        <span class="bk-val" id="r-bio-yield">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bk-label">Financing advantage</span>
+        <span class="bk-val" id="r-fin">—</span>
+      </div>
+      <div class="breakdown-row total">
+        <span class="bk-label">Total 10-year membership advantage</span>
+        <span class="bk-val" id="r-total2">—</span>
+      </div>
+    </div>
+
+    <!-- 5. Year table -->
+    <div class="section-label">Year-by-year detail</div>
+    <div class="year-table-wrap">
+      <table class="year-table" id="year-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Acres</th>
+            <th>Seed savings</th>
+            <th>Proven quality</th>
+            <th>Bio — cost</th>
+            <th>Bio — yield</th>
+            <th>Fin. savings</th>
+            <th>Annual total</th>
+          </tr>
+        </thead>
+        <tbody id="year-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- 6. CTA -->
+    <div class="cta-block">
+      <p>These numbers are built on <strong>your farm, your acres, your mix</strong> — not a generic average. HomeForty membership puts this advantage to work from day one.</p>
+      <button class="btn-cta">Talk to HomeForty About Membership</button>
+    </div>
+
+    <button class="restart-link" onclick="go(1);">← Start over with different numbers</button>
+
+  </section>
+
+</main>
+
+<script>
+/* ── State ─────────────────────────────────────────────── */
+const state = { cornShare: 0.33 };
+
+/* ── Landing → Wizard ──────────────────────────────────── */
+function startWizard() {
+  document.getElementById('landing-section').style.display = 'none';
+  document.getElementById('wizard-section').style.display  = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Navigation ────────────────────────────────────────── */
+function go(step) {
+  document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('step-' + step).classList.add('active');
+
+  for (let i = 1; i <= 6; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active', 'done');
+    if (i < step)      { dot.classList.add('done');   dot.textContent = '✓'; }
+    else if (i === step){ dot.classList.add('active'); dot.textContent = i;   }
+    else               { dot.textContent = i; }
+    if (i < 6) {
+      const line = document.getElementById('line-' + i);
+      if (line) line.classList.toggle('done', i < step);
+    }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Corn share toggle ─────────────────────────────────── */
+function setCornShare(val, btn) {
+  document.querySelectorAll('.split-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const customField = document.getElementById('custom-corn-field');
+  if (val === 'custom') {
+    customField.style.display = 'flex';
+    state.cornShare = parseInt(document.getElementById('corn-pct').value) / 100;
+  } else {
+    customField.style.display = 'none';
+    state.cornShare = val;
+  }
+}
+
+/* ── Corn preview update ────────────────────────────────── */
+function updateCornPreview() {
+  const val = parseInt(document.getElementById('adv-corn').value);
+  const perAc = (val / 2.3).toFixed(2);
+  document.getElementById('corn-adv-display').textContent = '$' + val + '/unit';
+  document.getElementById('corn-ac-preview').textContent  = '$' + perAc;
+}
+document.getElementById('adv-corn').addEventListener('input', updateCornPreview);
+
+/* ── Calculation ───────────────────────────────────────── */
+function fmt(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function calculate() {
+  const acresStart  = parseFloat(document.getElementById('acres-start').value)  || 500;
+  const acresEnd    = parseFloat(document.getElementById('acres-end').value)     || acresStart;
+  const cornAdv     = parseFloat(document.getElementById('adv-corn').value)      || 30;
+  const soyAdv      = parseFloat(document.getElementById('adv-soy').value)       || 10;
+  const opStart     = parseFloat(document.getElementById('op-line').value)       || 0;
+  const opEnd       = parseFloat(document.getElementById('op-line-end').value)   || opStart;
+  const yieldCorn   = parseFloat(document.getElementById('yield-corn').value)    || 4;
+  const yieldSoy    = parseFloat(document.getElementById('yield-soy').value)     || 1;
+  const priceCorn   = parseFloat(document.getElementById('price-corn').value)    || 4.50;
+  const priceSoy    = parseFloat(document.getElementById('price-soy').value)     || 11.00;
+  const cornShare   = state.cornShare;
+  const soyShare    = 1 - cornShare;
+  const bioCost     = parseFloat(document.getElementById('bio-cost').value)      || 10;
+  const bioYieldSoy = 2; // fixed 2 bu/ac on soybeans
+
+  const priceGapInc    = 0.02;
+  const rateAdv        = 0.082 - 0.055; // 2.7%
+  const unitsPerAcCorn = 1 / 2.3;
+
+  let totalCorn = 0, totalSoy = 0, totalQuality = 0, totalFin = 0;
+  let totalBioCost = 0, totalBioYield = 0;
+  const rows = [];
+
+  for (let yr = 1; yr <= 10; yr++) {
+    const t     = (yr - 1) / 9;
+    const acres = acresStart + t * (acresEnd - acresStart);
+    const op    = opStart    + t * (opEnd    - opStart);
+    const gapMult = Math.pow(1 + priceGapInc, yr - 1);
+
+    const cornSav    = acres * cornShare * unitsPerAcCorn * cornAdv * gapMult;
+    const soySav     = acres * soyShare  * 1.0            * soyAdv  * gapMult;
+    const qualitySav = acres * cornShare * yieldCorn * priceCorn
+                     + acres * soyShare  * yieldSoy  * priceSoy;
+    const bioCostSav  = acres * soyShare * bioCost;
+    const bioYieldSav = acres * soyShare * bioYieldSoy * priceSoy;
+    const finSav      = op * rateAdv;
+    const annTotal    = cornSav + soySav + qualitySav + bioCostSav + bioYieldSav + finSav;
+
+    totalCorn    += cornSav;
+    totalSoy     += soySav;
+    totalQuality += qualitySav;
+    totalBioCost += bioCostSav;
+    totalBioYield+= bioYieldSav;
+    totalFin     += finSav;
+    rows.push({ yr, acres, cornSav, soySav, qualitySav, bioCostSav, bioYieldSav, finSav, annTotal });
+  }
+
+  const grandTotal = totalCorn + totalSoy + totalQuality + totalBioCost + totalBioYield + totalFin;
+
+  /* ── Compounding ───────────────────────────────────────── */
+  const reinvestPct  = (parseFloat(document.getElementById('reinvest-pct').value)  || 50) / 100;
+  const reinvestRate = (parseFloat(document.getElementById('reinvest-rate').value) || 5)  / 100;
+  let cInvested = 0, cFutureValue = 0;
+  rows.forEach(r => {
+    const slice = r.annTotal * reinvestPct;
+    const yearsLeft = 10 - r.yr;
+    cInvested    += slice;
+    cFutureValue += slice * Math.pow(1 + reinvestRate, yearsLeft);
+  });
+  const cGrowth = cFutureValue - cInvested;
+  const cTotal  = grandTotal + cFutureValue;
+
+  /* ── Fill DOM ──────────────────────────────────────────── */
+  document.getElementById('r-total').textContent    = fmt(grandTotal);
+  document.getElementById('r-total2').textContent   = fmt(grandTotal);
+  document.getElementById('r-per-year').textContent = '≈ ' + fmt(grandTotal / 10) + ' per year on average';
+  document.getElementById('r-corn').textContent     = fmt(totalCorn);
+  document.getElementById('r-soy').textContent      = fmt(totalSoy);
+  document.getElementById('r-quality').textContent  = fmt(totalQuality);
+  document.getElementById('r-bio-cost').textContent = fmt(totalBioCost);
+  document.getElementById('r-bio-yield').textContent= fmt(totalBioYield);
+  document.getElementById('r-fin').textContent      = fmt(totalFin);
+
+  document.getElementById('c-pct-label').textContent  = Math.round(reinvestPct * 100) + '%';
+  document.getElementById('c-rate-label').textContent = (reinvestRate * 100) + '%';
+  document.getElementById('c-invested').textContent   = fmt(cInvested);
+  document.getElementById('c-growth').textContent     = fmt(cGrowth);
+  document.getElementById('c-total').textContent      = fmt(cTotal);
+
+  /* ── Bar chart ─────────────────────────────────────────── */
+  const maxAnn = Math.max(...rows.map(r => r.annTotal));
+  const barsEl = document.getElementById('bars-container');
+  barsEl.innerHTML = '';
+  rows.forEach(r => {
+    const pct = maxAnn > 0 ? (r.annTotal / maxAnn * 100).toFixed(1) : 0;
+    barsEl.innerHTML += `
+      <div class="bar-row">
+        <span class="bar-yr">Yr ${r.yr}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <span class="bar-num">${fmt(r.annTotal)}</span>
+      </div>`;
+  });
+
+  /* ── Year table ────────────────────────────────────────── */
+  const tbody = document.getElementById('year-tbody');
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    tbody.innerHTML += `<tr>
+      <td>Year ${r.yr}</td>
+      <td>${Math.round(r.acres).toLocaleString()}</td>
+      <td>${fmt(r.cornSav + r.soySav)}</td>
+      <td>${fmt(r.qualitySav)}</td>
+      <td>${fmt(r.bioCostSav)}</td>
+      <td>${fmt(r.bioYieldSav)}</td>
+      <td>${fmt(r.finSav)}</td>
+      <td>${fmt(r.annTotal)}</td>
+    </tr>`;
+  });
+  tbody.innerHTML += `<tr>
+    <td>10-Year Total</td>
+    <td>—</td>
+    <td>${fmt(totalCorn + totalSoy)}</td>
+    <td>${fmt(totalQuality)}</td>
+    <td>${fmt(totalBioCost)}</td>
+    <td>${fmt(totalBioYield)}</td>
+    <td>${fmt(totalFin)}</td>
+    <td>${fmt(grandTotal)}</td>
+  </tr>`;
+}
+</script>
+</body>
+</html>
